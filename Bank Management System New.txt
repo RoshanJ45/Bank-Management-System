@@ -1,0 +1,203 @@
+package RoshanBank;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Scanner;
+import Customer.*;
+import Employee.*;
+public class BankManage {
+ private static Map<String, String> customerCredentials = new HashMap<>();
+ private static Map<String, String> employeeCredentials = new HashMap<>();
+ public static void main(String[] args) {
+ Scanner sc = new Scanner(System.in);
+ LinkedList<Account> accounts = new LinkedList<>();
+ // Dummy customer and employee credentials
+ customerCredentials.put("custo1", "pass123");
+ employeeCredentials.put("employe1", "pass123");
+ System.out.println("Enter 1 for customer or 2 for employee:");
+ int c = sc.nextInt();
+ sc.nextLine(); // Consume the newline character
+ if (c == 1) {
+ System.out.println("Enter your username:");
+ String username = sc.nextLine();
+ System.out.println("Enter your password:");
+ String password = sc.nextLine();
+ if (authenticateCustomer(username, password)) {
+ System.out.println("Authentication successful.");
+ System.out.println("Enter your 'Name' and 'CustomerId' to access your Savings 
+Account:");
+ String name = sc.nextLine();
+ String customerId = sc.nextLine();
+ Account customer = new Customer(name, customerId);
+ accounts.add(customer);
+ customer.menu();
+ } else {
+ System.out.println("Authentication failed. Invalid credentials.");
+ }
+ } else if (c == 2) {
+ System.out.println("Enter your username:");
+ String username = sc.nextLine();
+ System.out.println("Enter your password:");
+ String password = sc.nextLine();
+ if (authenticateEmployee(username, password)) {
+ System.out.println("Authentication successful.");
+ System.out.println("Enter your 'Name' and 'employeeId' to access your Savings 
+Account:");
+ String name1 = sc.nextLine();
+ String employeeId = sc.nextLine();
+ Account employee = new Employee(name1, employeeId);
+ accounts.add(employee);
+ employee.menu();
+ } else {
+ System.out.println("Authentication failed. Invalid credentials.");
+ }
+ }
+ }
+ private static boolean authenticateCustomer(String username, String password) {
+ return customerCredentials.containsKey(username) && 
+customerCredentials.get(username).equals(password);
+ }
+ private static boolean authenticateEmployee(String username, String password) {
+ return employeeCredentials.containsKey(username) && 
+employeeCredentials.get(username).equals(password);
+ }
+}
+Account Interface:-
+package RoshanBank;
+public interface Account {
+ void deposit(double amount);
+ void withdraw(double amount);
+ double getBalance();
+ void menu();
+}
+Customer Package Code:
+package Customer;
+import java.util.Scanner;
+import RoshanBank.Account;
+public class Customer implements Account{ 
+private double balance;
+ private String customerName;
+ private String customerId;
+ public Customer(String customerName, String customerId) {
+ this.customerName = customerName;
+ this.customerId = customerId;
+ }
+ public void deposit(double amount) {
+ if (amount > 0) {
+ balance += amount;
+ 
+ }
+ }
+ public void withdraw(double amount) {
+ if (amount > 0 && balance >= amount) {
+ balance -= amount;
+ } else {
+ System.out.println("Insufficient balance");
+ }
+ }
+ public double getBalance() {
+ return balance;
+ }
+ public void menu() {
+ Scanner sc = new Scanner(System.in);
+ char option;
+ System.out.println("Welcome customer, " + customerName);
+ System.out.println("Your ID is: " + customerId);
+ System.out.println("A. Check Balance");
+ System.out.println("B. Deposit");
+ System.out.println("C. Withdraw");
+ System.out.println("D. Exit");
+ do {
+ System.out.println("==============================");
+ System.out.println("Enter an option:");
+ option = sc.next().charAt(0);
+ System.out.println();
+ switch (option){
+ case 'A':
+ System.out.println("Balance: " + getBalance());
+ break;
+ case 'B':
+ System.out.println("Enter amount to deposit:");
+ double depositAmount = sc.nextDouble();
+ deposit(depositAmount);
+ break;
+ case 'C':
+ System.out.println("Enter amount to withdraw:");
+ double withdrawAmount = sc.nextDouble();
+ withdraw(withdrawAmount);
+ break;
+ case 'D':
+ System.out.println("Exiting...");
+ break;
+ default:
+ System.out.println("Invalid option! Please enter again.");
+ break;
+ }
+ } while (option != 'D');
+ }
+}
+Employee Package Code:-
+package Employee;
+import java.util.Scanner;
+import RoshanBank.Account;
+public class Employee implements Account{
+ private double balance;
+ private String employeeName;
+ private String employeeId;
+ public Employee(String employeeName, String employeeId) {
+ this.employeeName = employeeName;
+ this.employeeId = employeeId;
+ }
+ public void deposit(double amount) {
+ if (amount > 0) {
+ balance += amount;
+ }
+ }
+ public void withdraw(double amount) {
+ if (amount > 0 && balance >= amount) {
+ balance -= amount;
+ } else {
+ System.out.println("Insufficient balance");
+ }
+ }
+ public double getBalance() {
+ return balance;
+ }
+ public void menu() {
+ Scanner sc = new Scanner(System.in);
+ char option;
+ System.out.println("Welcome employee, " + employeeName);
+ System.out.println("Your ID is: " + employeeId);
+ System.out.println("A. Check Balance");
+ System.out.println("B. Deposit");
+ System.out.println("C. Withdraw");
+ System.out.println("D. Exit");
+ do {
+ System.out.println("==============================");
+ System.out.println("Enter an option:");
+ option = sc.next().charAt(0);
+ System.out.println();
+ switch (option) {
+ case 'A':
+ System.out.println("Balance: " + getBalance());
+ break;
+ case 'B':
+ System.out.println("Enter amount to deposit:");
+ double depositAmount = sc.nextDouble();
+ deposit(depositAmount);
+ break;
+ case 'C':
+ System.out.println("Enter amount to withdraw:");
+ double withdrawAmount = sc.nextDouble();
+ withdraw(withdrawAmount);
+ break;
+ case 'D':
+ System.out.println("Exiting...");
+ break;
+ default:
+ System.out.println("Invalid option! Please enter again.");
+ break;
+ }
+ } while (option != 'D');
+ }
+}
